@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنتجات | متجر الأناقة للملابس - مأرب</title>
+    <meta name="description" content="تصفح أحدث المنتجات من متجر الأناقة للملابس في مأرب. تشكيلة رجالي, نسائي, أطفال وعروض.">
+    <meta name="keywords" content="منتجات, ملابس رجالي, ملابس نسائي, أطفال, عروض, مأرب">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">...</header>
+    <main>
+        <section class="page-hero">
+            <h1>منتجاتنا</h1>
+        </section>
+        <section class="container">
+            <!-- أزرار التصنيفات -->
+            <div class="category-filters">
+                <button class="filter-btn active" data-category="all">الكل</button>
+                <button class="filter-btn" data-category="men">رجالي</button>
+                <button class="filter-btn" data-category="women">نسائي</button>
+                <button class="filter-btn" data-category="kids">أطفال</button>
+                <button class="filter-btn" data-category="offers">عروض</button>
+            </div>
+            <!-- شبكة المنتجات -->
+            <div id="allProducts" class="product-grid">
+                <!-- تحميل ديناميكي -->
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">...</footer>
+    <a href="https://wa.me/967777777777" class="floating-whatsapp">...</a>
+    <script src="js/main.js"></script>
+    <script>
+        // إضافة منطق تحميل المنتجات حسب التصنيف
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllProducts('all');
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    loadAllProducts(this.dataset.category);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

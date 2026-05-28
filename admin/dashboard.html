@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة التحكم - إضافة منتج</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+    <div class="admin-container">
+        <h2>إضافة منتج جديد</h2>
+        <form id="addProductForm">
+            <label>اسم المنتج</label>
+            <input type="text" id="productName" required>
+            
+            <label>التصنيف</label>
+            <select id="productCategory">
+                <option value="رجالي">رجالي</option>
+                <option value="نسائي">نسائي</option>
+                <option value="أطفال">أطفال</option>
+                <option value="عروض">عروض</option>
+            </select>
+            
+            <label>السعر (ريال)</label>
+            <input type="number" id="productPrice">
+            
+            <label>الوصف</label>
+            <textarea id="productDescription" rows="3"></textarea>
+            
+            <label>صورة المنتج</label>
+            <div class="image-upload-area">
+                <input type="file" id="imageFile" accept="image/*" capture="environment">
+                <button type="button" id="uploadImageBtn">رفع الصورة</button>
+                <div class="progress" style="display:none;"><progress id="uploadProgress" value="0" max="100"></progress></div>
+                <img id="imagePreview" src="#" alt="معاينة" style="display:none; max-width:200px; margin-top:10px;">
+                <input type="hidden" id="imageUrl" value="">
+            </div>
+            
+            <button type="submit">حفظ المنتج</button>
+        </form>
+        <p id="formStatus"></p>
+    </div>
+    <script src="script.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+</body>
+</html>

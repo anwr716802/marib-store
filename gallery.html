@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض الأعمال | متجر الأناقة للملابس</title>
+    <meta name="description" content="شاهد معرض صور متجر الأناقة للملابس في مأرب. أحدث التصاميم والأعمال.">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+        .gallery-item img:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">...</header>
+    <main>
+        <section class="page-hero">
+            <h1>معرض الصور</h1>
+        </section>
+        <section class="container">
+            <div id="galleryContainer" class="gallery-grid">
+                <!-- تحميل من Google Sheets -->
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">...</footer>
+    <a href="https://wa.me/967777777777" class="floating-whatsapp">...</a>
+    <script src="js/main.js"></script>
+</body>
+</html>

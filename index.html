@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر الأناقة للملابس | مأرب - اليمن</title>
+    <meta name="description" content="أفضل متجر ملابس في مأرب. أحدث الأزياء الرجالية والنسائية والأطفال. توصيل سريع لجميع أحياء مأرب. عروض وخصومات يومية.">
+    <meta name="keywords" content="ملابس, مأرب, اليمن, أزياء, رجالي, نسائي, أطفال, عروض, متجر ملابس, توصيل مأرب">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="متجر الأناقة للملابس | مأرب">
+    <meta property="og:description" content="أحدث الأزياء في مأرب. توصيل سريع لجميع الأحياء.">
+    <meta property="og:image" content="assets/images/logo.png">
+    <meta property="og:url" content="https://example.com">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ar_YE">
+    <meta property="og:site_name" content="متجر الأناقة للملابس">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="متجر الأناقة للملابس | مأرب">
+    <meta name="twitter:description" content="أحدث الأزياء في مأرب. توصيل سريع.">
+    <meta name="twitter:image" content="assets/images/logo.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-72x72.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="متجر الأناقة">
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- زر تثبيت التطبيق PWA -->
+    <div id="installBanner" class="install-banner" style="display:none;">
+        <div class="install-content">
+            <span class="install-close" onclick="closeInstallBanner()">&times;</span>
+            <img src="assets/icons/icon-192x192.png" alt="تثبيت" width="50" height="50">
+            <div>
+                <strong>هل تريد تثبيت الموقع على الشاشة الرئيسية؟</strong>
+                <p>وصول أسرع وأسهل</p>
+            </div>
+            <button id="installBtn" class="btn-primary">تثبيت</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="متجر الأناقة للملابس" width="60" height="60">
+                <span class="store-name">متجر الأناقة للملابس</span>
+            </a>
+            <nav class="main-nav" id="mainNav">
+                <button class="nav-toggle" aria-label="القائمة" onclick="toggleMenu()">
+                    <span></span><span></span><span></span>
+                </button>
+                <ul>
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="gallery.html">المعرض</a></li>
+                    <li><a href="contact.html">تواصل معنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>متجر الأناقة للملابس</h1>
+                <p>أحدث الأزياء الرجالية والنسائية والأطفال في مأرب. توصيل سريع لجميع الأحياء. عروض يومية لا تفوت!</p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn-primary">تصفح المنتجات</a>
+                    <a href="https://wa.me/967777777777" target="_blank" class="btn-whatsapp">
+                        <img src="data:image/svg+xml;base64,..." alt="واتساب" width="24" height="24"> واتساب مباشر
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories">
+            <div class="container">
+                <h2>تسوق حسب القسم</h2>
+                <div class="cat-grid">
+                    <a href="products.html?category=men" class="cat-card">
+                        <img src="assets/images/products/men.jpg" alt="ملابس رجالية">
+                        <h3>رجالي</h3>
+                    </a>
+                    <a href="products.html?category=women" class="cat-card">
+                        <img src="assets/images/products/women.jpg" alt="ملابس نسائية">
+                        <h3>نسائي</h3>
+                    </a>
+                    <a href="products.html?category=kids" class="cat-card">
+                        <img src="assets/images/products/kids.jpg" alt="ملابس أطفال">
+                        <h3>أطفال</h3>
+                    </a>
+                    <a href="products.html?category=offers" class="cat-card">
+                        <img src="assets/images/products/offers.jpg" alt="عروض الملابس">
+                        <h3>العروض</h3>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section class="featured">
+            <div class="container">
+                <h2>منتجات مميزة</h2>
+                <div id="featuredProducts" class="product-grid">
+                    <!-- سيتم تحميلها من Google Sheets عبر JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Brief -->
+        <section class="about-brief">
+            <div class="container">
+                <div class="about-flex">
+                    <div class="about-text">
+                        <h2>من نحن</h2>
+                        <p>متجر الأناقة للملابس في مأرب يقدم أحدث صيحات الموضة بجودة عالية وأسعار منافسة. نخدم جميع أحياء مأرب مع خدمة توصيل سريعة. زورونا في فرعنا الرئيسي بشارع الستين.</p>
+                        <a href="about.html" class="btn-secondary">اقرأ المزيد</a>
+                    </div>
+                    <img src="assets/images/about.jpg" alt="متجر الأناقة مأرب" class="about-img">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="index.html" class="footer-logo">
+                        <img src="assets/images/logo.png" alt="متجر الأناقة للملابس" width="50">
+                        <span>متجر الأناقة للملابس</span>
+                    </a>
+                    <p>أفضل متجر ملابس في مأرب. نقدم أحدث الأزياء بجودة عالية وتوصيل سريع.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="about.html">من نحن</a></li>
+                        <li><a href="products.html">المنتجات</a></li>
+                        <li><a href="contact.html">تواصل معنا</a></li>
+                        <li><a href="faq.html">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>تواصل معنا</h4>
+                    <p>شارع الستين، أمام بنك اليمن الدولي، مأرب</p>
+                    <p>واتساب: <a href="https://wa.me/967777777777">777777777 967+</a></p>
+                    <div class="social-links">
+                        <a href="https://facebook.com/store" target="_blank" title="فيسبوك">FB</a>
+                        <a href="https://maps.app.goo.gl/example" target="_blank" title="خرائط جوجل">Maps</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; 2024 <a href="https://alshaab-contracting.com">متجر الأناقة للملابس</a></p>
+                <p class="developer">مُبرمج الموقع من الفريق التقني لمؤسسة الشعب للمقاولات العامة - مأرب</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- زر واتساب العائم -->
+    <a href="https://wa.me/967777777777" class="floating-whatsapp" target="_blank" title="تواصل عبر واتساب">
+        <img src="data:image/svg+xml;base64,..." alt="واتساب" width="30" height="30">
+    </a>
+
+    <!-- Toast للإشعارات -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/main.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+</body>
+</html>

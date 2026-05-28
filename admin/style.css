@@ -1,0 +1,27 @@
+* { box-sizing: border-box; margin:0; padding:0; }
+body.admin-body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; color: #222; }
+.admin-header { background: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+.admin-header h1 { font-size: 1.4rem; }
+.btn-logout { background: #c0392b; border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+.admin-tabs { display: flex; flex-wrap: wrap; gap: 5px; padding: 15px; background: white; border-bottom: 1px solid #ddd; }
+.tab-btn { background: #eee; border: none; padding: 10px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; }
+.tab-btn.active { background: #2c3e50; color: white; }
+.tab-content { padding: 20px; }
+.list-container { margin-top: 20px; }
+.card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+.card img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-left: 15px; }
+.card-info { flex:1; }
+.card-actions button { margin-right: 5px; background: #eee; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.btn-primary { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+.btn-secondary { background: #eee; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; }
+.modal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index:1000; }
+.modal-content { background: white; border-radius: 16px; padding: 25px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; position: relative; }
+.close { position: absolute; top: 10px; left: 15px; font-size: 24px; cursor: pointer; }
+label { display: block; margin: 10px 0 5px; font-weight: bold; }
+input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; margin-bottom: 10px; }
+progress { width: 100%; height: 20px; margin: 10px 0; }
+.image-upload-area { margin: 10px 0; }
+@media (max-width:600px) {
+    .admin-tabs { justify-content: center; }
+    .card { flex-direction: column; align-items: flex-start; }
+}
