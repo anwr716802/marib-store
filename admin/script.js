@@ -37,21 +37,17 @@ async function apiCall(action, params = {}, method = 'GET') {
                             'updateSetting','addGalleryImage','deleteGalleryImage',
                             'updatePage'];
     if (securedActions.includes(action)) {
-        url += '&apiKey=' + API_KEY;
+        params.apiKey = API_KEY; // نضيف المفتاح كبارامتر
     }
-
+    // تحويل جميع params إلى query string
+    const queryString = Object.keys(params)
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+        .join('&');
+    if (queryString) {
+        url += '&' + queryString;
+    }
     try {
-        let response;
-        if (method === 'POST') {
-            response = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(params),
-                headers: { 'Content-Type': 'application/json' }
-            });
-        } else {
-            const query = Object.keys(params).map(k => k + '=' + encodeURIComponent(params[k])).join('&');
-            response = await fetch(url + (query ? '&' + query : ''));
-        }
+        const response = await fetch(url);
         const data = await response.json();
         if (data.error) {
             console.error('API Error:', data.error);
@@ -61,7 +57,7 @@ async function apiCall(action, params = {}, method = 'GET') {
         return data;
     } catch (err) {
         console.error('Network Error:', err);
-        alert('فشل الاتصال بـ Google Sheets. راجع الإعدادات.');
+        alert('فشل الاتصال بـ Google Sheets.');
         return { error: err.message };
     }
 }
