@@ -1,6 +1,6 @@
 
 // ==================== الإعدادات - ضع قيمك هنا ====================
-const API_BASE = 'https://script.google.com/macros/s/AKfycbw1aZPfaqW3ALAG7mmiDxMqfJJzLf-Nj-WOj3GScHzQ84l7PmPPK_0wg3_wP-pvc-NIzw/exec'; // رابط Apps Script Web App
+const API_BASE = '/api/proxy'; // يستخدم الدالة الوسيطة على Vercel
 const API_KEY = 'mySecretKey123XYZ'; // نفس المفتاح في Code.gs
 const CLOUD_NAME = 'dxjzks7xl'; // Cloudinary Cloud Name
 const UPLOAD_PRESET = 'myupload'; // Cloudinary Upload Preset (unsigned)
