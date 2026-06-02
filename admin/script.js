@@ -260,11 +260,40 @@ document.getElementById('productForm').addEventListener('submit', async function
 
 // تحميل التصنيفات للقائمة المنسدلة
 async function loadCategoriesForSelect(selectId) {
-    const data = await apiCall('getCategories');
     const select = document.getElementById(selectId);
-    if (!select || !data || data.error || !Array.isArray(data)) return;
-    const rows = data.slice(1);
-    select.innerHTML = rows.map(row => `<option value="${row[1]}">${row[1]}</option>`).join('');
+    if (!select) return;
+
+    // التصنيفات الافتراضية في حالة عدم وجود بيانات
+    const defaultCategories = [
+        { name: 'رجالي', slug: 'men' },
+        { name: 'نسائي', slug: 'women' },
+        { name: 'أطفال', slug: 'kids' },
+        { name: 'عروض', slug: 'offers' }
+    ];
+
+    try {
+        const data = await apiCall('getCategories');
+        if (data && !data.error && Array.isArray(data) && data.length > 1) {
+            // نجح الجلب ويوجد صفوف بعد صف الرؤوس
+            const rows = data.slice(1);
+            const categories = rows.map(row => ({ name: row[1], slug: row[2] }));
+            populateSelect(select, categories);
+            addDebug('تم تحميل التصنيفات من Google Sheets', 'success');
+            return;
+        }
+    } catch (err) {
+        addDebug('فشل جلب التصنيفات، استخدام الافتراضية: ' + err.message, 'error');
+    }
+
+    // استخدام التصنيفات الافتراضية
+    populateSelect(select, defaultCategories);
+    addDebug('تم استخدام التصنيفات الافتراضية', 'info');
+}
+
+function populateSelect(select, categories) {
+    select.innerHTML = categories.map(cat => 
+        `<option value="${cat.name}">${cat.name}</option>`
+    ).join('');
 }
 
 // ==================== باقي الأقسام (اختصار، يمكنك إضافتها لاحقًا) ====================
