@@ -1,9 +1,9 @@
-// إعدادات المتجر (يتم قراءتها من URL أو من ملف الإعدادات المحلي)
+// ==================== إعدادت المتجر ====================
 const CONFIG = {
-    storeName: 'متجر الأناقة للملابس',
+    storeName: 'متجر الأناقة للملابس',        // غيّر حسب متجرك
     storeType: 'clothing',
-    whatsapp: '967777777777',
-    googleMaps: 'https://maps.app.goo.gl/example',
+    whatsapp: '967777777777',                 // رقم واتساب
+    googleMaps: 'https://maps.app.goo.gl/...',
     primaryColor: '#2c3e50',
     secondaryColor: '#c0392b',
     logo: 'assets/images/logo.png',
@@ -11,7 +11,10 @@ const CONFIG = {
     developerUrl: 'https://alshaab-contracting.com'
 };
 
-// ========== PWA Installation ==========
+// ==================== API Proxy ====================
+const API_BASE = '/api/proxy';  // يستخدم البروكسي على Vercel
+
+// ==================== PWA Installation ====================
 let deferredPrompt;
 const installBanner = document.getElementById('installBanner');
 const installBtn = document.getElementById('installBtn');
@@ -19,9 +22,7 @@ const installBtn = document.getElementById('installBtn');
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    if (installBanner) {
-        installBanner.style.display = 'block';
-    }
+    if (installBanner) installBanner.style.display = 'block';
 });
 
 if (installBtn) {
@@ -29,7 +30,6 @@ if (installBtn) {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response: ${outcome}`);
             deferredPrompt = null;
             installBanner.style.display = 'none';
         }
@@ -37,145 +37,136 @@ if (installBtn) {
 }
 
 function closeInstallBanner() {
-    if (installBanner) {
-        installBanner.style.display = 'none';
-    }
+    if (installBanner) installBanner.style.display = 'none';
 }
 
-// ========== Menu Toggle ==========
+// ==================== Menu Toggle ====================
 function toggleMenu() {
     const navUl = document.querySelector('.main-nav ul');
-    if (navUl) {
-        navUl.classList.toggle('show');
-    }
+    if (navUl) navUl.classList.toggle('show');
 }
 
-// ========== Toast Notification ==========
+// ==================== Toast ====================
 function showToast(message) {
     const toast = document.getElementById('toast');
     if (!toast) return;
     toast.textContent = message;
     toast.classList.add('show');
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ========== Load Products from Google Sheets (محاكاة) ==========
-async function loadFeaturedProducts() {
-    // في الواقع سيتم استبدال هذا بطلب إلى Google Sheets API
-    // هنا نضع بيانات افتراضية للعرض
-    const products = [
-        {
-            id: 1,
-            name: 'قميص رجالي كلاسيك',
-            category: 'رجالي',
-            price: '8,500 ريال',
-            image: 'assets/images/products/men.jpg',
-            description: 'قميص رجالي أنيق من القطن المصري',
-            whatsapp: CONFIG.whatsapp
-        },
-        {
-            id: 2,
-            name: 'فستان سهرة نسائي',
-            category: 'نسائي',
-            price: '12,000 ريال',
-            image: 'assets/images/products/women.jpg',
-            description: 'فستان سهرة فاخر بتصميم عصري',
-            whatsapp: CONFIG.whatsapp
-        },
-        {
-            id: 3,
-            name: 'طقم أطفال رياضي',
-            category: 'أطفال',
-            price: '4,500 ريال',
-            image: 'assets/images/products/kids.jpg',
-            description: 'طقم رياضي مريح للأطفال',
-            whatsapp: CONFIG.whatsapp
-        },
-        {
-            id: 4,
-            name: 'عرض خاص - 3 قطع ب 15,000',
-            category: 'عروض',
-            price: '15,000 ريال',
-            image: 'assets/images/products/offers.jpg',
-            description: 'عرض خاص 3 قطع متنوعة بسعر مميز',
-            whatsapp: CONFIG.whatsapp
+// ==================== جلب المنتجات من Google Sheets عبر البروكسي ====================
+async function fetchProducts(category = 'all') {
+    try {
+        const params = new URLSearchParams({ action: 'getProducts' });
+        const response = await fetch(`${API_BASE}?${params.toString()}`);
+        const data = await response.json();
+        if (data.error) { console.error(data.error); return []; }
+        // البيانات تأتي على شكل [headerRow, ...productRows]
+        const rows = data.slice(1); // تجاهل الصف الأول من الرؤوس
+        const products = rows.map(row => ({
+            id: row[0],
+            name: row[1],
+            category: row[2],
+            price: row[3],
+            description: row[4],
+            image_url: row[5],
+            whatsapp: row[6] || CONFIG.whatsapp
+        }));
+        // فلترة حسب التصنيف إذا لزم الأمر
+        if (category !== 'all') {
+            const categoryMap = { men: 'رجالي', women: 'نسائي', kids: 'أطفال', offers: 'عروض' };
+            const targetCategory = categoryMap[category] || category;
+            return products.filter(p => p.category === targetCategory);
         }
-    ];
+        return products;
+    } catch (err) {
+        console.error('فشل جلب المنتجات:', err);
+        return [];
+    }
+}
 
-    const container = document.getElementById('featuredProducts');
+// ==================== عرض المنتجات ====================
+function displayProducts(products, containerId) {
+    const container = document.getElementById(containerId);
     if (!container) return;
-
+    if (products.length === 0) {
+        container.innerHTML = '<p>لا توجد منتجات حالياً.</p>';
+        return;
+    }
     container.innerHTML = products.map(product => `
         <div class="product-card">
-            <img src="${product.image}" alt="${product.name}" loading="lazy">
+            <img src="${product.image_url}" alt="${product.name}" loading="lazy">
             <div class="product-info">
                 <span class="category">${product.category}</span>
                 <h3>${product.name}</h3>
                 <p class="description">${product.description}</p>
-                <p class="price">${product.price}</p>
+                <p class="price">${product.price ? product.price + ' ريال' : ''}</p>
                 <div class="product-actions">
-                    <a href="https://wa.me/${product.whatsapp}?text=مرحباً، أريد ${product.name}" 
-                       target="_blank" class="btn-whatsapp-sm">
-                        واتساب
-                    </a>
-                    <button onclick="shareProduct('${product.name}', '${product.description}', '${product.image}', '${window.location.origin}/product.html?id=${product.id}')" class="share-btn">
-                        مشاركة
-                    </button>
+                    <a href="https://wa.me/${product.whatsapp}?text=مرحباً، أريد ${encodeURIComponent(product.name)}" target="_blank" class="btn-whatsapp-sm">واتساب</a>
+                    <button onclick="shareProduct('${product.name}', '${product.description}', '${product.image_url}', '${window.location.origin}/product.html?id=${product.id}')" class="share-btn">مشاركة</button>
                 </div>
             </div>
         </div>
     `).join('');
 }
 
-// ========== Share Functionality ==========
+// ==================== تحميل تلقائي في الصفحة الرئيسية ====================
+async function loadFeaturedProducts() {
+    const products = await fetchProducts('all');
+    displayProducts(products, 'featuredProducts');
+}
+
+// ==================== فلترة المنتجات في صفحة المنتجات ====================
+async function loadAllProducts(category = 'all') {
+    const products = await fetchProducts(category);
+    displayProducts(products, 'allProducts');
+}
+
+// ==================== مشاركة ====================
 function shareProduct(title, description, imageUrl, productUrl) {
     if (navigator.share) {
-        navigator.share({
-            title: title,
-            text: description,
-            url: productUrl
-        }).catch(() => {
-            copyToClipboard(productUrl);
-        });
+        navigator.share({ title, text: description, url: productUrl }).catch(() => copyToClipboard(productUrl));
     } else {
         copyToClipboard(productUrl);
     }
 }
 
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        showToast('تم نسخ الرابط للمشاركة');
-    }).catch(() => {
-        prompt('انسخ الرابط:', text);
-    });
+    navigator.clipboard.writeText(text).then(() => showToast('تم نسخ الرابط للمشاركة'))
+        .catch(() => prompt('انسخ الرابط:', text));
 }
 
-// ========== Service Worker Registration ==========
+// ==================== Service Worker ====================
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
+            .then(reg => console.log('SW registered'))
+            .catch(err => console.log('SW failed', err));
     });
 }
 
-// ========== Page Specific Logic ==========
+// ==================== تشغيل الصفحة المناسبة ====================
 document.addEventListener('DOMContentLoaded', () => {
-    // تحميل المنتجات المميزة
+    // الصفحة الرئيسية
     if (document.getElementById('featuredProducts')) {
         loadFeaturedProducts();
     }
-
-    // إغلاق القائمة عند النقر خارجها
+    // صفحة المنتجات
+    if (document.getElementById('allProducts')) {
+        loadAllProducts();
+        // أزرار الفلترة
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                loadAllProducts(this.dataset.category);
+            });
+        });
+    }
+    // إغلاق القائمة
     document.addEventListener('click', (e) => {
         const nav = document.querySelector('.main-nav ul');
-        const toggle = document.querySelector('.nav-toggle');
         if (nav && nav.classList.contains('show') && !e.target.closest('.main-nav')) {
             nav.classList.remove('show');
         }
