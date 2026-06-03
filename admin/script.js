@@ -255,7 +255,167 @@ document.getElementById('pageForm').addEventListener('submit', async function(e)
     closePageForm();
     loadPages();
 });
+// ==================== دوال المنتجات الكاملة ====================
 
+// فتح نموذج إضافة منتج
+function openProductForm() {
+    document.getElementById('productFormModal').style.display = 'flex';
+    document.getElementById('productFormTitle').textContent = 'إضافة منتج جديد';
+    document.getElementById('productForm').reset();
+    document.getElementById('prodId').value = '';
+    document.getElementById('prodImageUrl').value = '';
+    document.getElementById('prodImagePreview').style.display = 'none';
+    document.getElementById('prodUploadProgress').style.display = 'none';
+    loadCategoriesForSelect('prodCategory');
+    addDebug('تم فتح نموذج إضافة منتج', 'info');
+}
+
+// إغلاق نموذج المنتج
+function closeProductForm() {
+    document.getElementById('productFormModal').style.display = 'none';
+}
+
+// تعديل منتج
+function editProduct(id, name, cat, price, desc, img, wa) {
+    openProductForm();
+    document.getElementById('prodId').value = id;
+    document.getElementById('prodName').value = name;
+    document.getElementById('prodCategory').value = cat;
+    document.getElementById('prodPrice').value = price;
+    document.getElementById('prodDesc').value = desc;
+    document.getElementById('prodWhatsapp').value = wa;
+    document.getElementById('prodImageUrl').value = img;
+    if (img) {
+        document.getElementById('prodImagePreview').src = img;
+        document.getElementById('prodImagePreview').style.display = 'block';
+    }
+    document.getElementById('productFormTitle').textContent = 'تعديل المنتج';
+    addDebug('تعديل المنتج: ' + name, 'info');
+}
+
+// حذف منتج
+async function deleteProduct(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+    const res = await apiCall('deleteProduct', { id });
+    if (!res.error) {
+        addDebug('تم حذف المنتج', 'success');
+        loadProducts();
+    }
+}
+
+// تحميل التصنيفات في قائمة المنتج المنسدلة
+async function loadCategoriesForSelect(selectId) {
+    const select = document.getElementById(selectId);
+    if (!select) {
+        addDebug('عنصر select غير موجود: ' + selectId, 'error');
+        return;
+    }
+    
+    const defaultCategories = [
+        { name: 'رجالي', slug: 'men' },
+        { name: 'نسائي', slug: 'women' },
+        { name: 'أطفال', slug: 'kids' },
+        { name: 'عروض', slug: 'offers' }
+    ];
+
+    try {
+        const data = await apiCall('getCategories');
+        if (data && !data.error && Array.isArray(data) && data.length > 1) {
+            const rows = data.slice(1);
+            const categories = rows.map(row => ({ name: row[1], slug: row[2] }));
+            populateSelect(select, categories);
+            addDebug('تم تحميل التصنيفات من Google Sheets', 'success');
+            return;
+        }
+    } catch (err) {
+        addDebug('فشل جلب التصنيفات: ' + err.message, 'error');
+    }
+    
+    populateSelect(select, defaultCategories);
+    addDebug('تم استخدام التصنيفات الافتراضية', 'info');
+}
+
+// ملء قائمة منسدلة
+function populateSelect(select, categories) {
+    select.innerHTML = categories.map(cat => 
+        `<option value="${cat.name}">${cat.name}</option>`
+    ).join('');
+}
+
+// رفع صورة المنتج (بالنقر على زر الرفع)
+document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'uploadProdImageBtn') {
+        e.preventDefault();
+        const fileInput = document.getElementById('prodImageFile');
+        const files = fileInput.files;
+        addDebug(`عدد الملفات المختارة: ${files.length}`, 'info');
+        if (files.length === 0) {
+            alert('اختر صورة أولاً');
+            return;
+        }
+        const file = files[0];
+        const category = document.getElementById('prodCategory').value;
+        let folder = 'marib-store/products/other';
+        if (category === 'رجالي') folder = 'marib-store/products/men';
+        else if (category === 'نسائي') folder = 'marib-store/products/women';
+        else if (category === 'أطفال') folder = 'marib-store/products/kids';
+        else if (category === 'عروض') folder = 'marib-store/products/offers';
+        
+        addDebug(`المجلد المستهدف: ${folder}`, 'info');
+        addDebug(`بدء رفع: ${file.name} (${file.size} bytes)`, 'info');
+        
+        uploadImage(file, folder).then(url => {
+            document.getElementById('prodImageUrl').value = url;
+            document.getElementById('prodImagePreview').src = url;
+            document.getElementById('prodImagePreview').style.display = 'block';
+            addDebug(`تم تعيين رابط الصورة: ${url}`, 'success');
+        }).catch(err => {
+            addDebug(`فشل الرفع: ${err}`, 'error');
+            alert('خطأ في رفع الصورة: ' + err);
+        });
+    }
+});
+
+// حفظ المنتج
+document.getElementById('productForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const product = {
+        name: document.getElementById('prodName').value.trim(),
+        category: document.getElementById('prodCategory').value,
+        price: document.getElementById('prodPrice').value.trim(),
+        description: document.getElementById('prodDesc').value.trim(),
+        image_url: document.getElementById('prodImageUrl').value.trim(),
+        whatsapp: document.getElementById('prodWhatsapp').value.trim()
+    };
+    const id = document.getElementById('prodId').value;
+    if (id) product.id = id;
+
+    addDebug(`Payload: ${JSON.stringify(product)}`, 'info');
+    
+    if (!product.name) {
+        addDebug('اسم المنتج فارغ', 'error');
+        alert('الرجاء إدخال اسم المنتج');
+        return;
+    }
+    if (!product.image_url) {
+        addDebug('رابط الصورة فارغ', 'error');
+        alert('الرجاء رفع صورة المنتج أولاً');
+        return;
+    }
+    if (!product.category) {
+        addDebug('التصنيف غير محدد', 'error');
+        alert('الرجاء اختيار تصنيف');
+        return;
+    }
+
+    const action = id ? 'updateProduct' : 'addProduct';
+    const res = await apiCall(action, product);
+    if (!res.error) {
+        addDebug('تم الحفظ بنجاح', 'success');
+        closeProductForm();
+        loadProducts();
+    }
+});
 // ==================== عام ====================
 function logout() { sessionStorage.removeItem('adminAuth'); window.location.href = 'login.html'; }
 showTab('products');
