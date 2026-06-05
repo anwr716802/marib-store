@@ -90,29 +90,46 @@
         </section>
 
         <!-- Categories Section -->
-        <section class="categories">
-            <div class="container">
-                <h2>تسوق حسب القسم</h2>
-                <div class="cat-grid">
-                    <a href="products.html?category=men" class="cat-card">
-                        <img src="assets/images/products/men.png" alt="ملابس رجالية">
-                        <h3>رجالي</h3>
-                    </a>
-                    <a href="products.html?category=women" class="cat-card">
-                        <img src="assets/images/products/women.png" alt="ملابس نسائية">
-                        <h3>نسائي</h3>
-                    </a>
-                    <a href="products.html?category=kids" class="cat-card">
-                        <img src="assets/images/products/kids.png" alt="ملابس أطفال">
-                        <h3>أطفال</h3>
-                    </a>
-                    <a href="products.html?category=offers" class="cat-card">
-                        <img src="assets/images/products/offers.png" alt="عروض الملابس">
-                        <h3>العروض</h3>
-                    </a>
-                </div>
+        <!-- قسم الأقسام بشكل أيقوني -->
+<section class="categories container">
+    <h2>تسوق حسب القسم</h2>
+    <div class="cat-grid">
+        <a href="products.html?category=men" class="cat-card">
+            <span class="cat-icon">👔</span>
+            <h3>رجالي</h3>
+        </a>
+        <a href="products.html?category=women" class="cat-card">
+            <span class="cat-icon">👗</span>
+            <h3>نسائي</h3>
+        </a>
+        <a href="products.html?category=kids" class="cat-card">
+            <span class="cat-icon">👶</span>
+            <h3>أطفال</h3>
+        </a>
+        <a href="products.html?category=offers" class="cat-card">
+            <span class="cat-icon">🏷️</span>
+            <h3>عروض</h3>
+        </a>
+    </div>
+</section>
+
+<!-- Modal تفاصيل المنتج -->
+<div id="productModal" class="modal" style="display:none;">
+    <div class="modal-content product-modal-content">
+        <span class="close" onclick="closeProductModal()">&times;</span>
+        <img id="modalProductImage" src="" alt="">
+        <div class="modal-product-info">
+            <span id="modalProductCategory" class="category"></span>
+            <h2 id="modalProductName"></h2>
+            <p id="modalProductPrice" class="price"></p>
+            <p id="modalProductDesc" class="description"></p>
+            <div class="modal-actions">
+                <a id="modalWhatsappBtn" href="#" target="_blank" class="btn-whatsapp">واتساب للطلب</a>
+                <button id="modalShareBtn" class="share-btn">مشاركة</button>
             </div>
-        </section>
+        </div>
+    </div>
+</div>
 
         <!-- Featured Products -->
         <section class="featured">
