@@ -172,3 +172,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// ... (الكود السابق)
+
+// عرض المنتجات مع ربط حدث الضغط لفتح المودال
+function displayProducts(products, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (products.length === 0) {
+        container.innerHTML = '<p>لا توجد منتجات حالياً.</p>';
+        return;
+    }
+    container.innerHTML = products.map(product => `
+        <div class="product-card" onclick="openProductModal('${product.id}', '${product.name}', '${product.category}', '${product.price}', '${product.description}', '${product.image_url}', '${product.whatsapp}')">
+            <img src="${product.image_url}" alt="${product.name}" loading="lazy">
+            <div class="product-info">
+                <span class="category">${product.category}</span>
+                <h3>${product.name}</h3>
+                <p class="price">${product.price ? product.price + ' ريال' : ''}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// فتح المودال بتفاصيل المنتج
+function openProductModal(id, name, category, price, description, imageUrl, whatsapp) {
+    document.getElementById('modalProductImage').src = imageUrl;
+    document.getElementById('modalProductName').textContent = name;
+    document.getElementById('modalProductCategory').textContent = category;
+    document.getElementById('modalProductPrice').textContent = price ? price + ' ريال' : 'اتصل للسعر';
+    document.getElementById('modalProductDesc').textContent = description;
+    document.getElementById('modalWhatsappBtn').href = `https://wa.me/${whatsapp}?text=مرحباً، أريد ${encodeURIComponent(name)}`;
+    document.getElementById('modalShareBtn').onclick = () => shareProduct(name, description, imageUrl, window.location.href);
+    document.getElementById('productModal').style.display = 'flex';
+}
+
+// إغلاق المودال
+function closeProductModal() {
+    document.getElementById('productModal').style.display = 'none';
+}
+
+// إغلاق المودال عند النقر خارج المحتوى
+window.onclick = function(event) {
+    const modal = document.getElementById('productModal');
+    if (event.target == modal) {
+        closeProductModal();
+    }
+}
