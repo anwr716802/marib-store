@@ -243,7 +243,11 @@ a {
 
 /* ========== الهيرو الخلفية المتحركة ========== */
 .hero {
-    background: linear-gradient(-45deg, #1a252f, #2c3e50, #34495e, #2c3e50);
+ 
+    
+    background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200') center/cover no-repeat;
+    background-blend-mode: overlay;
+    
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     color: white;
